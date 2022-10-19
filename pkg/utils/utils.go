@@ -44,7 +44,7 @@ func GetBestProductJSON(r io.Reader) (product.Product, error) {
 		// In this case, err != nil means decoder reached closing bracket
 		uerr := &json.UnmarshalFieldError{}
 		if err != nil {
-			if errors.As(err, uerr) {
+			if errors.As(err, &uerr) {
 				break
 			} else {
 				return product.Product{}, err
