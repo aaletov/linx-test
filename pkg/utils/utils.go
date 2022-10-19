@@ -4,10 +4,22 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
+	"os"
+	"strings"
 
 	"github.com/aaletov/linx-test/pkg/product"
 	"github.com/gocarina/gocsv"
+)
+
+type DecoderType = func(io.Reader) (product.Product, error)
+
+var (
+	Decoders = map[string]DecoderType{
+		"csv":  GetBestProductCSV,
+		"json": GetBestProductJSON,
+	}
 )
 
 func GetCSVUmarshaller(r io.Reader) (*gocsv.Unmarshaller, error) {
@@ -64,4 +76,43 @@ func GetBestProductCSV(r io.Reader) (product.Product, error) {
 		}
 	}
 	return bestProduct, nil
+}
+
+func OpenWithCheck(path string) (io.Reader, DecoderType, error) {
+	var (
+		ioreader io.Reader
+		decoder  DecoderType
+		err      error
+	)
+
+	for {
+		if path == "" {
+			err = errors.New("Path cannot be empty")
+			break
+		}
+		splitPath := strings.Split(path, ".")
+		if len(splitPath) == 1 {
+			err = errors.New(fmt.Sprintf("No file specified: %v\n", path))
+			break
+		}
+		extension := splitPath[len(splitPath)-1]
+		if strings.Contains(extension, "/") {
+			err = errors.New(fmt.Sprintf("Incorrect path: %v\n", path))
+			break
+		}
+		var ok bool
+		if decoder, ok = Decoders[extension]; !ok {
+			err = errors.New(fmt.Sprintf("Not implemented support for: .%v\n", extension))
+			break
+		}
+		ioreader, err = os.Open(path)
+		if err != nil {
+			err = fmt.Errorf("Incorrect file path: %v\n", err)
+			break
+		}
+
+		return ioreader, decoder, nil
+	}
+
+	return nil, nil, err
 }
