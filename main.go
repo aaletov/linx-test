@@ -25,9 +25,16 @@ func main() {
 		fmt.Println("Path cannot be empty")
 		os.Exit(1)
 	}
-
 	splitPath := strings.Split(*pathPtr, ".")
+	if len(splitPath) == 1 {
+		fmt.Printf("No file specified: %v\n", *pathPtr)
+		os.Exit(1)
+	}
 	extension := splitPath[len(splitPath)-1]
+	if strings.Contains(extension, "/") {
+		fmt.Printf("Incorrect path: %v\n", *pathPtr)
+		os.Exit(1)
+	}
 	decoder, ok := decoders[extension]
 	if !ok {
 		fmt.Printf("Not implemented support for: .%v\n", extension)
