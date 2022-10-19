@@ -1,2 +1,4 @@
-all:
-	go build -o build/linx.out .
+include variables.mk
+
+binary:
+	go build -o $(BUILD_DIR)/linx.out .
