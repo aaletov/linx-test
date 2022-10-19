@@ -21,7 +21,8 @@ func GetCSVUmarshaller(r io.Reader) (*gocsv.Unmarshaller, error) {
 	return u, nil
 }
 
-func GetBestProductJSON(d *json.Decoder) (product.Product, error) {
+func GetBestProductJSON(r io.Reader) (product.Product, error) {
+	d := json.NewDecoder(r)
 	var bestProduct product.Product
 	d.Token()
 	for d.More() {
@@ -44,7 +45,8 @@ func GetBestProductJSON(d *json.Decoder) (product.Product, error) {
 	return bestProduct, nil
 }
 
-func GetBestProductCSV(u *gocsv.Unmarshaller) (product.Product, error) {
+func GetBestProductCSV(r io.Reader) (product.Product, error) {
+	u, _ := GetCSVUmarshaller(r)
 	var bestProduct product.Product
 	for {
 		record, err := u.Read()
