@@ -1,7 +1,7 @@
 package product
 
 type Product struct {
-	Name   string `json:"product"`
+	Name   string `json:"product" csv:"Product"`
 	Price  int
 	Rating int
 }
