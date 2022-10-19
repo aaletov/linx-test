@@ -21,6 +21,10 @@ var (
 
 func main() {
 	flag.Parse()
+	if *pathPtr == "" {
+		fmt.Println("Path cannot be empty")
+		os.Exit(1)
+	}
 
 	splitPath := strings.Split(*pathPtr, ".")
 	fmt.Println(*pathPtr)
