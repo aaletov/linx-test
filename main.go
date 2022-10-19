@@ -27,9 +27,9 @@ func main() {
 	}
 
 	splitPath := strings.Split(*pathPtr, ".")
-	fmt.Println(*pathPtr)
 	extension := splitPath[len(splitPath)-1]
-	if _, ok := decoders[extension]; !ok {
+	decoder, ok := decoders[extension]
+	if !ok {
 		fmt.Printf("Not implemented support for: .%v\n", extension)
 		os.Exit(1)
 	}
@@ -40,7 +40,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	bestProduct, err := decoders[extension](ioreader)
+	bestProduct, err := decoder(ioreader)
 	if err != nil {
 		fmt.Printf("Internal file processing error: %v\n", err)
 		os.Exit(1)
