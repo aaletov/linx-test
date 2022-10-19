@@ -10,19 +10,11 @@
 
 ## Запуск
 
-Собрать исполняемый файл, собрать docker образ
+Собрать исполняемый файл, собрать docker образ. Для запуска поместить необходимый файл в папку `resources`
+и вызвать `make run`, передав имя файла.
 
 ```
 make binary
 make image
-```
-
-Поместить в папку `resources` необходимый файл и запустить контейнер, смонтировав в него папку `resources` и
-передав путь до файла (или поменять имя файла в make run).
-
-```
-docker run \
-	-v $(PROJECT_DIR)/resources:/app/resources \
-	aapozd/lynx-test:$(COMMIT_HASH) \
-	--path="/app/resources/db.json"
+make run FILE="db.json"
 ```

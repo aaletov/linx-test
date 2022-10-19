@@ -10,5 +10,5 @@ run:
 	docker run \
 	-v $(PROJECT_DIR)/resources:/app/resources \
 	aapozd/lynx-test:$(COMMIT_HASH) \
-	--path="/app/resources/db.json"
+	--path="/app/resources/$(FILE)"
 
